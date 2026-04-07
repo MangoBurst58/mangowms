@@ -1,0 +1,60 @@
+{
+  "_chunk-BPfiOKWt.js": {
+    "file": "assets/chunk-BPfiOKWt.js",
+    "name": "chunk"
+  },
+  "node_modules/@tabler/core/dist/css/tabler.min.css": {
+    "file": "assets/tabler-i-Wka0K7.css",
+    "name": "tabler.min",
+    "names": [
+      "tabler.css"
+    ],
+    "src": "node_modules/@tabler/core/dist/css/tabler.min.css",
+    "isEntry": true
+  },
+  "node_modules/@tabler/core/dist/js/tabler.min.js": {
+    "file": "assets/tabler.min-CA7Ro0Kf.js",
+    "name": "tabler.min",
+    "src": "node_modules/@tabler/core/dist/js/tabler.min.js",
+    "isEntry": true,
+    "imports": [
+      "_chunk-BPfiOKWt.js"
+    ]
+  },
+  "node_modules/bootstrap/dist/css/bootstrap.min.css": {
+    "file": "assets/bootstrap-DuXFZDrf.css",
+    "name": "bootstrap.min",
+    "names": [
+      "bootstrap.css"
+    ],
+    "src": "node_modules/bootstrap/dist/css/bootstrap.min.css",
+    "isEntry": true
+  },
+  "node_modules/bootstrap/dist/js/bootstrap.min.js": {
+    "file": "assets/bootstrap.min-DqsCSv1G.js",
+    "name": "bootstrap.min",
+    "src": "node_modules/bootstrap/dist/js/bootstrap.min.js",
+    "isEntry": true,
+    "imports": [
+      "_chunk-BPfiOKWt.js"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-BIr72W26.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DQklJJZ4.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_chunk-BPfiOKWt.js"
+    ]
+  }
+}
