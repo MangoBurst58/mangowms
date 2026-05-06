@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Add Batch | MangoWMS')
 @section('title', 'Add New Batch')
 
 @section('content')

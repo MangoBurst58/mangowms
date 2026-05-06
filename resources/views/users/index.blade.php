@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'User Management | MangoWMS')
 @section('title', 'User Management')
 
 @section('content')

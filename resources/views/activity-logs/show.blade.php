@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Log Details | MangoWMS')
 @section('title', 'Audit Log Detail')
 
 @section('content')

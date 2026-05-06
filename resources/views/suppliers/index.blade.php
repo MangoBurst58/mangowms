@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('title', 'Suppliers | MangoWMS')
 @section('title', 'Suppliers')
 
 @section('content')
