@@ -15,6 +15,15 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <!-- jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -62,6 +71,48 @@
         
         .transition-sidebar {
             transition: all 0.3s ease;
+        }
+        
+        /* Select2 Dark Mode */
+        .select2-container--default .select2-selection--single {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+            border-radius: 0.5rem !important;
+            padding: 6px !important;
+            height: 42px !important;
+        }
+        
+        .select2-dropdown {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        
+        .select2-search__field {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        .select2-results__option {
+            color: #cbd5e1 !important;
+        }
+        
+        .select2-results__option--highlighted {
+            background-color: #4f46e5 !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: #64748b !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #f1f5f9 !important;
+            line-height: 28px !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px !important;
         }
     </style>
 </head>

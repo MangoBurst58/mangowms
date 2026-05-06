@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Helpers\ActivityLogger;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -30,22 +31,35 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'sku' => 'required|unique:products',
+            'sku' => 'nullable|unique:products',
             'name' => 'required',
             'unit' => 'required',
+            'base_unit' => 'nullable|in:pcs,kg,liter,box,carton',
             'purchase_price' => 'required|numeric',
             'selling_price' => 'required|numeric',
             'min_stock' => 'required|integer',
         ]);
         
-        Product::create([
+        // Auto generate SKU jika kosong
+        $sku = $request->sku;
+        if (empty($sku)) {
+            $categoryName = null;
+            if ($request->category_id) {
+                $category = Category::find($request->category_id);
+                $categoryName = $category ? $category->name : null;
+            }
+            $sku = Product::generateSKU($categoryName);
+        }
+        
+        $product = Product::create([
             'company_id' => auth()->user()->company_id,
             'category_id' => $request->category_id,
-            'sku' => $request->sku,
+            'sku' => $sku,
             'barcode' => $request->barcode,
             'name' => $request->name,
             'description' => $request->description,
             'unit' => $request->unit,
+            'base_unit' => $request->base_unit ?? 'pcs',
             'purchase_price' => $request->purchase_price,
             'selling_price' => $request->selling_price,
             'min_stock' => $request->min_stock,
@@ -54,7 +68,10 @@ class ProductController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
         
-        return redirect()->route('products.index')->with('success', 'Product created successfully!');
+        // Log activity
+        ActivityLogger::log('create', 'product', $product->id, null, $product->toArray(), 'Created product: ' . $product->name);
+        
+        return redirect()->route('products.index')->with('success', 'Product created successfully! SKU: ' . $sku);
     }
 
     public function show(Product $product)
@@ -77,10 +94,13 @@ class ProductController extends Controller
             'sku' => 'required|unique:products,sku,' . $product->id,
             'name' => 'required',
             'unit' => 'required',
+            'base_unit' => 'nullable|in:pcs,kg,liter,box,carton',
             'purchase_price' => 'required|numeric',
             'selling_price' => 'required|numeric',
             'min_stock' => 'required|integer',
         ]);
+        
+        $oldData = $product->toArray();
         
         $product->update([
             'category_id' => $request->category_id,
@@ -89,6 +109,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'unit' => $request->unit,
+            'base_unit' => $request->base_unit ?? 'pcs',
             'purchase_price' => $request->purchase_price,
             'selling_price' => $request->selling_price,
             'min_stock' => $request->min_stock,
@@ -97,12 +118,22 @@ class ProductController extends Controller
             'is_active' => $request->has('is_active'),
         ]);
         
+        // Log activity
+        ActivityLogger::log('update', 'product', $product->id, $oldData, $product->toArray(), 'Updated product: ' . $product->name);
+        
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
 
     public function destroy(Product $product)
     {
+        $productName = $product->name;
+        $productId = $product->id;
+        $oldData = $product->toArray();
+        
         $product->delete();
+        
+        // Log activity
+        ActivityLogger::log('delete', 'product', $productId, $oldData, null, 'Deleted product: ' . $productName);
         
         return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
     }

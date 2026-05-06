@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Batch;
 use App\Models\Product;
 use App\Models\Warehouse;
+use App\Helpers\ActivityLogger;
 use Illuminate\Http\Request;
 
 class BatchController extends Controller
@@ -47,7 +48,7 @@ class BatchController extends Controller
             'notes' => 'nullable|string',
         ]);
         
-        Batch::create([
+        $batch = Batch::create([
             'product_id' => $request->product_id,
             'warehouse_id' => $request->warehouse_id,
             'batch_number' => $request->batch_number,
@@ -58,6 +59,9 @@ class BatchController extends Controller
             'purchase_price' => $request->purchase_price,
             'notes' => $request->notes,
         ]);
+        
+        // Log activity
+        ActivityLogger::log('create', 'batch', $batch->id, null, $batch->toArray(), 'Created batch: ' . $batch->batch_number);
         
         return redirect()->route('batches.index')->with('success', 'Batch created successfully!');
     }
@@ -93,6 +97,8 @@ class BatchController extends Controller
             'notes' => 'nullable|string',
         ]);
         
+        $oldData = $batch->toArray();
+        
         $batch->update([
             'product_id' => $request->product_id,
             'warehouse_id' => $request->warehouse_id,
@@ -104,12 +110,22 @@ class BatchController extends Controller
             'notes' => $request->notes,
         ]);
         
+        // Log activity
+        ActivityLogger::log('update', 'batch', $batch->id, $oldData, $batch->toArray(), 'Updated batch: ' . $batch->batch_number);
+        
         return redirect()->route('batches.index')->with('success', 'Batch updated successfully!');
     }
 
     public function destroy(Batch $batch)
     {
+        $batchNumber = $batch->batch_number;
+        $batchId = $batch->id;
+        $oldData = $batch->toArray();
+        
         $batch->delete();
+        
+        // Log activity
+        ActivityLogger::log('delete', 'batch', $batchId, $oldData, null, 'Deleted batch: ' . $batchNumber);
         
         return redirect()->route('batches.index')->with('success', 'Batch deleted successfully!');
     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Batch;
 use App\Models\Warehouse;
+use App\Models\StockMovement;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -84,13 +85,41 @@ class DashboardController extends Controller
         // ============================================
         // STOCK MOVEMENT CHART (SEMENTARA KOSONG)
         // ============================================
-        $chartData = ['labels' => [], 'in' => [], 'out' => []];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i);
-            $chartData['labels'][] = $date->format('d M');
-            $chartData['in'][] = 0;
-            $chartData['out'][] = 0;
+        // Stock Movement Chart (Last 7 days - REAL DATA)
+$chartData = ['labels' => [], 'in' => [], 'out' => []];
+
+// Ambil data stock_movement dari database
+$movements = StockMovement::where('company_id', $user->company_id)
+    ->where('movement_date', '>=', now()->subDays(7))
+    ->get();
+
+// Kelompokkan per tanggal
+$dateRange = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = now()->subDays($i)->format('Y-m-d');
+    $dateRange[$date] = [
+        'label' => now()->subDays($i)->format('d M'),
+        'in' => 0,
+        'out' => 0
+    ];
+}
+
+foreach ($movements as $movement) {
+    $dateKey = $movement->movement_date->format('Y-m-d');
+    if (isset($dateRange[$dateKey])) {
+        if ($movement->type == 'in') {
+            $dateRange[$dateKey]['in'] += $movement->quantity;
+        } else {
+            $dateRange[$dateKey]['out'] += $movement->quantity;
         }
+    }
+}
+
+foreach ($dateRange as $data) {
+    $chartData['labels'][] = $data['label'];
+    $chartData['in'][] = $data['in'];
+    $chartData['out'][] = $data['out'];
+}
         
         // ============================================
         // RETURN VIEW
